@@ -32,7 +32,7 @@ uses
 procedure TViewPrincipal.Animation(aLayout: TFMXObject);
 begin
   TLayout(aLayout).Opacity := 0;
-  TLayout(aLayout).AnimateFloat('Opacity', 1, 0.2);
+  TLayout(aLayout).AnimateFloat('Opacity', 1, 0.9);
 end;
 
 procedure TViewPrincipal.FormCreate(Sender: TObject);
