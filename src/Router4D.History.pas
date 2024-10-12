@@ -43,6 +43,7 @@ type
       FListCacheOrder : TList<String>;
       FIndexCache : Integer;
       FMaxCacheHistory : Integer;
+      const MAX_FRAME_COUNT = 25;
       procedure CreateInstancePersistent( aPath : String);
       //procedure CacheKeyNotify(Sender: TObject; const Key: string; Action: TCollectionNotification);
     public
@@ -55,6 +56,8 @@ type
       function IndexRouter : TFMXObject; overload;
       function AddHistoryConteiner ( aKey : String; aObject : TFMXObject) : TRouter4DHistory; overload;
       function GetHistoryContainer ( aKey : String ) : TFMXObject;
+      function GetRouter : String;
+      function PreviousRouter : String;      
       {$ELSE}
       function MainRouter ( aValue : TPanel ) : TRouter4DHistory; overload;
       function MainRouter : TPanel; overload;
@@ -119,6 +122,16 @@ end;
 function TRouter4DHistory.GetHistoryContainer(aKey: String): TFMXObject;
 begin
   FListCacheContainer.TryGetValue(aKey, Result);
+end;
+
+function TRouter4DHistory.PreviousRouter: String;
+begin
+  Result := Self.FListCacheOrder[Self.FIndexCache - 1];
+end;
+
+function TRouter4DHistory.GetRouter: String;
+begin
+  Result := Self.FListCacheOrder[Self.FIndexCache];
 end;
 {$ELSE}
 function TRouter4DHistory.MainRouter(aValue: TPanel): TRouter4DHistory;
@@ -199,11 +212,11 @@ begin
 
   try GlobalEventBus.RegisterSubscriber(aObject); except end;
 
-  if FListCache.Count > 25 then
+  if FListCache.Count > MAX_FRAME_COUNT then
     for mKey in FListCache.Keys do
     begin
-      FListCache.Remove(aKey);
-      exit;
+      FListCache.Remove(mKey);
+      Break;
     end;
 
 
